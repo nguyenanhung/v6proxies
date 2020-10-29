@@ -1,6 +1,8 @@
-## Squid Ipv6 Proxies
+# Squid Ipv6 Proxies
 
 I made private ipv6 proxies for you. Use squid software. Translate ipv4 port to ipv6. Each port to one ipv6 outgoing
+
+## Table of Contents
 
 <!--ts-->
   * [Squid Ipv6 Proxies](#squid-ipv6-proxies)
