@@ -2,19 +2,8 @@
 
 I made private ipv6 proxies for you. Use squid software. Translate ipv4 port to ipv6. Each port to one ipv6 outgoing
 
-<!--ts-->
-* [Squid Ipv6 Proxies](#squid-ipv6-proxies)
-* [Features](#features)
-* [Requirements](#requirements)
-* [Install](#install)
- * [Step 1](#step-1)
- * [Step 2](#step-2)
- * [Testing](#testing)
-* [License](#license)
+[toc]
 
-<!-- Added by: gcb, at: Thu 29 Oct 2020 01:53:53 PM +07 -->
-
-<!--te-->
 ## Features
 
 * Single IP for each /64 subnet
