@@ -50,9 +50,11 @@ def add_ipv6(num_ips, unique_ip=1):
             list_ipv6.append(str(ipv6))
 
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
-
-            with open(sh_add_ip, 'a') as the_file:
-                the_file.write(cmd + '\n')
+            if not os.path.exists(path=sh_add_ip):
+                with open(sh_add_ip, 'a') as the_file:
+                    the_file.write(cmd + '\n')
+            else:
+                print("%s exists")
     else:
 
         subnet = choices(list_network2, k=10)
@@ -65,10 +67,11 @@ def add_ipv6(num_ips, unique_ip=1):
             # r_conn.sadd(pool_name, ipv6)
             # cmd = '/sbin/ifconfig %s inet6 add %s/64' % (net_interface, ipv6)
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
-            with open(sh_add_ip, 'a') as the_file:
-                the_file.write(cmd + '\n')
-            # print(cmd)
-            # os.system(cmd)
+            if not os.path.exists(path=sh_add_ip):
+                with open(sh_add_ip, 'a') as the_file:
+                    the_file.write(cmd + '\n')
+            else:
+                print("%s exists")
     return list_ipv6
 
 
