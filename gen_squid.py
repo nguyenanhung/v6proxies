@@ -188,5 +188,5 @@ cfg_squid_gen = cfg_squid.format(pid=pool_name, squid_conf_refresh=squid_conf_re
                                  block_proxies=proxies)
 
 squid_conf_file = f'/etc/squid/squid-{pool_name}.conf'
-with open(squid_conf_file, 'a') as the_file:
+with open(squid_conf_file, 'w') as the_file:
     the_file.write(cfg_squid_gen + '\n')
