@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import argparse
+import os
 from ipaddress import IPv6Network, IPv6Address
 from random import seed, getrandbits, choices, choice
 
@@ -50,7 +51,7 @@ def add_ipv6(num_ips, unique_ip=1):
 
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
 
-            with open(sh_add_ip, 'w') as the_file:
+            with open(sh_add_ip, 'a') as the_file:
                 the_file.write(cmd + '\n')
     else:
 
@@ -64,7 +65,7 @@ def add_ipv6(num_ips, unique_ip=1):
             # r_conn.sadd(pool_name, ipv6)
             # cmd = '/sbin/ifconfig %s inet6 add %s/64' % (net_interface, ipv6)
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
-            with open(sh_add_ip, 'w') as the_file:
+            with open(sh_add_ip, 'a') as the_file:
                 the_file.write(cmd + '\n')
             # print(cmd)
             # os.system(cmd)
@@ -188,5 +189,8 @@ cfg_squid_gen = cfg_squid.format(pid=pool_name, squid_conf_refresh=squid_conf_re
                                  block_proxies=proxies)
 
 squid_conf_file = f'/etc/squid/squid-{pool_name}.conf'
-with open(squid_conf_file, 'w') as the_file:
-    the_file.write(cfg_squid_gen + '\n')
+if not os.path.exists(path=squid_conf_file):
+    with open(squid_conf_file, 'a') as the_file:
+        the_file.write(cfg_squid_gen + '\n')
+else:
+    print("%s exists")
