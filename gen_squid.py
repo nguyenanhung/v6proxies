@@ -50,7 +50,7 @@ def add_ipv6(num_ips, unique_ip=1):
 
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
 
-            with open(sh_add_ip, 'a') as the_file:
+            with open(sh_add_ip, 'w') as the_file:
                 the_file.write(cmd + '\n')
     else:
 
@@ -64,7 +64,7 @@ def add_ipv6(num_ips, unique_ip=1):
             # r_conn.sadd(pool_name, ipv6)
             # cmd = '/sbin/ifconfig %s inet6 add %s/64' % (net_interface, ipv6)
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
-            with open(sh_add_ip, 'a') as the_file:
+            with open(sh_add_ip, 'w') as the_file:
                 the_file.write(cmd + '\n')
             # print(cmd)
             # os.system(cmd)
