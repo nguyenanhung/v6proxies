@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import argparse
-
-from includes.gen_htpasswd import GenHtpasswd
 from ipaddress import IPv6Network, IPv6Address
 from random import seed, getrandbits, choices, choice
+
+from passlib.apache import HtpasswdFile
 
 parser = argparse.ArgumentParser(description='Gen Squid Config')
 parser.add_argument('--ipv6_subnet_full', help='ipv6 subnet full', required=True)
@@ -177,9 +177,11 @@ for ip_out in ipv6:
     start_port = start_port + 1
     proxies += proxy_format + '\n'
 
-gen_htpasswd = GenHtpasswd(filename='/etc/squid/' + pool_name + '.auth', create=True)
-gen_htpasswd.update(username=username, password=password)
-gen_htpasswd.save()
+auth_file = f'/etc/squid/{pool_name}.auth'
+
+ht = HtpasswdFile(auth_file, new=True)
+ht.set_password(username, password)
+ht.save()
 
 cfg_squid_gen = cfg_squid.format(pid=pool_name, squid_conf_refresh=squid_conf_refresh,
                                  squid_conf_suffix=squid_conf_suffix.format(pid=pool_name),
