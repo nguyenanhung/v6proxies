@@ -41,6 +41,10 @@ def add_ipv6(num_ips, unique_ip=1):
     network2 = IPv6Network(ipv6_subnet_full)
     list_network2 = list(network2.subnets(new_prefix=64))
     sh_add_ip = f'add_ip_{pool_name}.sh'
+    if os.path.exists(path=sh_add_ip):
+        os.remove(path=sh_add_ip)
+        print("%s exists. Removed" % sh_add_ip)
+
     if unique_ip == 1:
 
         subnet = choices(list_network2, k=num_ips)
@@ -50,11 +54,10 @@ def add_ipv6(num_ips, unique_ip=1):
             list_ipv6.append(str(ipv6))
 
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
-            if not os.path.exists(path=sh_add_ip):
-                with open(sh_add_ip, 'a') as the_file:
-                    the_file.write(cmd + '\n')
-            else:
-                print("%s exists")
+
+            with open(sh_add_ip, 'a') as the_file:
+                the_file.write(cmd + '\n')
+
     else:
 
         subnet = choices(list_network2, k=10)
@@ -67,11 +70,8 @@ def add_ipv6(num_ips, unique_ip=1):
             # r_conn.sadd(pool_name, ipv6)
             # cmd = '/sbin/ifconfig %s inet6 add %s/64' % (net_interface, ipv6)
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
-            if not os.path.exists(path=sh_add_ip):
-                with open(sh_add_ip, 'a') as the_file:
-                    the_file.write(cmd + '\n')
-            else:
-                print("%s exists")
+            with open(sh_add_ip, 'a') as the_file:
+                the_file.write(cmd + '\n')
     return list_ipv6
 
 
@@ -192,8 +192,8 @@ cfg_squid_gen = cfg_squid.format(pid=pool_name, squid_conf_refresh=squid_conf_re
                                  block_proxies=proxies)
 
 squid_conf_file = f'/etc/squid/squid-{pool_name}.conf'
-if not os.path.exists(path=squid_conf_file):
-    with open(squid_conf_file, 'a') as the_file:
-        the_file.write(cfg_squid_gen + '\n')
-else:
-    print("%s exists")
+if os.path.exists(path=squid_conf_file):
+    os.remove(path=squid_conf_file)
+    print("%s exists. Removed" % squid_conf_file)
+with open(squid_conf_file, 'a') as the_file:
+    the_file.write(cfg_squid_gen + '\n')
