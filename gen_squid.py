@@ -197,3 +197,8 @@ if os.path.exists(path=squid_conf_file):
     print("%s exists. Removed" % squid_conf_file)
 with open(squid_conf_file, 'a') as the_file:
     the_file.write(cfg_squid_gen + '\n')
+
+print("=========================== \n")
+
+print("Create %d proxies. Port start from %d with user: %s | password: %s" % (
+number_ipv6, start_port, username, password))
