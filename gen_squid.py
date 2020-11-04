@@ -207,7 +207,7 @@ print("\n \n")
 print("Run two command bellow to start proxies")
 print("\n \n")
 print(f"bash {base_path}/{sh_add_ip}")
-print(f"/usr/local/squid/sbin/squid {squid_conf_file}")
+print(f"/usr/local/squid/sbin/squid -f {squid_conf_file}")
 print("\n \n")
 print("Create %d proxies. Port start from %d with user: %s | password: %s" % (
     number_ipv6, start_port, username, password))
