@@ -10,7 +10,7 @@ echo "==========================================="
 # install depend
 echo "=========== Install Depend ================="
 
-apt install build-essential vim git wget htop curl python3.6 python3.6-dev python3.6-venv python3-pip -y
+apt install build-essential vim git wget htop curl python3.8 python3.8-dev python3.8-venv python3-pip -y
 pip3 install pip --upgrade
 
 
@@ -35,10 +35,10 @@ echo "==========================================="
 
 echo "=========== Install Python requirements ================="
 cd /opt/
-git clone git@github.com:manhnguyenduc/v6proxies.git
+git clone https://github.com/nguyenanhung/v6proxies.git
 cd /opt/v6proxies
-pip3.6 install --upgrade pip setuptools
-pip3.6 install -r requirements.txt
+pip3.8 install --upgrade pip setuptools
+pip3.8 install -r requirements.txt
 
 # Increase The Maximum Number Of Open Files
 
