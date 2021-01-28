@@ -21,9 +21,12 @@ echo "==========================================="
 echo "=========== reBuild Squid ================="
 
 cd /opt
-wget -c http://www.squid-cache.org/Versions/v3/3.5/squid-3.5.27.tar.gz
-tar -zxvf squid-3.5.27.tar.gz
-cd squid-3.5.27
+#wget -c http://www.squid-cache.org/Versions/v3/3.5/squid-3.5.27.tar.gz
+#tar -zxvf squid-3.5.27.tar.gz
+#cd squid-3.5.27
+wget -c http://www.squid-cache.org/Versions/v4/squid-4.13.tar.gz
+tar -zxvf squid-4.13.tar.gz
+cd squid-4.13
 ./configure 'CXXFLAGS=-DMAXTCPLISTENPORTS=65000' --enable-ltdl-convenience
 make && make install
 chmod 777 /usr/local/squid/var/logs/
