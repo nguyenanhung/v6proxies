@@ -168,8 +168,8 @@ squid_conf_suffix = '''
     
 
     coredump_dir /var/spool/squid3
-    unique_hostname V6proxies-Net
-    visible_hostname V6proxies-Net
+    unique_hostname AceBiz6-Net
+    visible_hostname AceBiz6-Net
 '''
 
 proxies = ''''''
