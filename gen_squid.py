@@ -94,8 +94,8 @@ cfg_squid = '''
     via off
 
     # Deny request for original source of a request
-    follow_x_forwarded_for allow localhost
-    follow_x_forwarded_for deny all
+    follow_x_forwarded_for allow all
+    # follow_x_forwarded_for deny all
 
     # See below
     request_header_access X-Forwarded-For deny all
@@ -178,7 +178,8 @@ ipv6 = add_ipv6(num_ips=number_ipv6, unique_ip=unique_ip)
 
 for ip_out in ipv6:
     proxy_format = '''
-    http_access allow allow_net
+    # http_access allow allow_net
+    http_access allow all
     http_port       {port}
     acl     p{port}  localport       {port}
     tcp_outgoing_address    {ip_out} p{port}
