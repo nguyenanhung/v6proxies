@@ -32,6 +32,7 @@ password = args.password
 
 sh_add_ip = f'add_ip_{pool_name}.sh'
 
+
 def gen_ipv6(ipv6_subnet):
     seed()
     network = IPv6Network(ipv6_subnet)
@@ -80,7 +81,7 @@ def add_ipv6(num_ips, unique_ip=1):
 
 
 cfg_squid = '''
-    
+
     max_filedesc 500000
     pid_filename /usr/local/squid/var/run/{pid}.pid
     access_log          none
@@ -116,7 +117,7 @@ cfg_squid = '''
     request_header_access All deny all
 
     cache           deny    all
-   
+
     acl to_ipv6 dst ipv6
     http_access deny all !to_ipv6
     acl allow_net src 1.1.1.1
@@ -155,17 +156,17 @@ squid_conf_suffix = '''
     http_access deny manager
 
     auth_param basic program /usr/local/squid/libexec/basic_ncsa_auth /etc/squid/{pid}.auth
-    
+
     auth_param basic children 5
     auth_param basic realm Web-Proxy
     auth_param basic credentialsttl 1 minute
     auth_param basic casesensitive off
-    
+
     acl db-auth proxy_auth REQUIRED
     http_access allow db-auth
     http_access allow localhost
     http_access deny all
-    
+
 
     coredump_dir /var/spool/squid3
     unique_hostname AceBiz6-Net
