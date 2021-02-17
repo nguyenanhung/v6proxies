@@ -120,7 +120,7 @@ cfg_squid = '''
 
     acl to_ipv6 dst ipv6
     http_access deny all !to_ipv6
-    acl allow_net src 1.1.1.1
+    acl allow_net src 2602:fed2:fa0:3c::/64
     {squid_conf_suffix}
     {squid_conf_refresh}
     {block_proxies}
