@@ -98,7 +98,7 @@ cfg_squid = '''
     # follow_x_forwarded_for deny all
 
     # See below
-    request_header_access X-Forwarded-For deny all
+    request_header_access X-Forwarded-For allow all
 
     request_header_access Authorization allow all
     request_header_access Proxy-Authorization allow all
@@ -114,12 +114,12 @@ cfg_squid = '''
     request_header_access Accept-Encoding allow all
     request_header_access Accept-Language allow all
     request_header_access Connection allow all
-    request_header_access All deny all
+    request_header_access All allow all
 
-    cache           deny    all
+    cache           allow    all
 
     acl to_ipv6 dst ipv6
-    http_access deny all !to_ipv6
+    # http_access deny all !to_ipv6
     acl allow_net src 2602:fed2:fa0:3c::/64
     {squid_conf_suffix}
     {squid_conf_refresh}
