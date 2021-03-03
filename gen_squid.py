@@ -11,8 +11,8 @@ parser = argparse.ArgumentParser(description='Gen Squid Config')
 parser.add_argument('--ipv6_subnet_full', help='ipv6 subnet full', required=True)
 parser.add_argument('--net_interface', help='net interface', required=True)
 parser.add_argument('--pool_name', help='pool name', required=True)
-parser.add_argument('--username', help='username', default='acebiz')
-parser.add_argument('--password', help='password', default='AceBizCloudProxy2021')
+parser.add_argument('--username', help='username', default='cloud')
+parser.add_argument('--password', help='password', default='v6ForYou69')
 parser.add_argument('--number_ipv6', help='number ipv6. Default = 250', default=250, type=int)
 parser.add_argument('--unique_ip', help='single ip for each /64 subnet. Default = 1', default=1, type=int)
 parser.add_argument('--start_port', help='start proxy port. Default 32000', default=32000, type=int)
@@ -94,11 +94,11 @@ cfg_squid = '''
     via off
 
     # Deny request for original source of a request
-    follow_x_forwarded_for allow all
-    # follow_x_forwarded_for deny all
+    follow_x_forwarded_for allow localhost
+    follow_x_forwarded_for deny all
 
     # See below
-    request_header_access X-Forwarded-For allow all
+    request_header_access X-Forwarded-For deny all
 
     request_header_access Authorization allow all
     request_header_access Proxy-Authorization allow all
@@ -114,13 +114,13 @@ cfg_squid = '''
     request_header_access Accept-Encoding allow all
     request_header_access Accept-Language allow all
     request_header_access Connection allow all
-    request_header_access All allow all
+    request_header_access All deny all
 
-    cache           allow    all
+    cache           deny    all
 
     acl to_ipv6 dst ipv6
-    # http_access deny all !to_ipv6
-    acl allow_net src 2602:fed2:fa0:3c::/64
+    http_access deny all !to_ipv6
+    acl allow_net src 1.1.1.1
     {squid_conf_suffix}
     {squid_conf_refresh}
     {block_proxies}
@@ -169,8 +169,8 @@ squid_conf_suffix = '''
 
 
     coredump_dir /var/spool/squid3
-    unique_hostname AceBiz6-Net
-    visible_hostname AceBiz6-Net
+    unique_hostname V6proxies-Net
+    visible_hostname V6proxies-Net
 '''
 
 proxies = ''''''
@@ -178,8 +178,7 @@ ipv6 = add_ipv6(num_ips=number_ipv6, unique_ip=unique_ip)
 
 for ip_out in ipv6:
     proxy_format = '''
-    # http_access allow allow_net
-    http_access allow all
+    http_access allow allow_net
     http_port       {port}
     acl     p{port}  localport       {port}
     tcp_outgoing_address    {ip_out} p{port}
