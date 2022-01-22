@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import argparse
-
-from includes.gen_htpasswd import GenHtpasswd
+import os
+import pathlib
 from ipaddress import IPv6Network, IPv6Address
 from random import seed, getrandbits, choices, choice
+
+from passlib.apache import HtpasswdFile
 
 parser = argparse.ArgumentParser(description='Gen Squid Config')
 parser.add_argument('--ipv6_subnet_full', help='ipv6 subnet full', required=True)
@@ -17,6 +19,8 @@ parser.add_argument('--start_port', help='start proxy port. Default 32000', defa
 
 args = parser.parse_args()
 
+base_path = pathlib.Path(__file__).parent.absolute()
+
 ipv6_subnet_full = args.ipv6_subnet_full
 net_interface = args.net_interface
 number_ipv6 = args.number_ipv6
@@ -25,6 +29,8 @@ start_port = args.start_port
 pool_name = args.pool_name
 username = args.username
 password = args.password
+
+sh_add_ip = f'add_ip_{pool_name}.sh'
 
 
 def gen_ipv6(ipv6_subnet):
@@ -39,7 +45,11 @@ def add_ipv6(num_ips, unique_ip=1):
     list_ipv6 = []
     network2 = IPv6Network(ipv6_subnet_full)
     list_network2 = list(network2.subnets(new_prefix=64))
-    sh_add_ip = f'add_ip_{pool_name}.sh'
+
+    if os.path.exists(path=sh_add_ip):
+        os.remove(path=sh_add_ip)
+        print("%s exists. Removed" % sh_add_ip)
+
     if unique_ip == 1:
 
         subnet = choices(list_network2, k=num_ips)
@@ -52,6 +62,7 @@ def add_ipv6(num_ips, unique_ip=1):
 
             with open(sh_add_ip, 'a') as the_file:
                 the_file.write(cmd + '\n')
+
     else:
 
         subnet = choices(list_network2, k=10)
@@ -66,13 +77,11 @@ def add_ipv6(num_ips, unique_ip=1):
             cmd = f'ip -6 addr add {ipv6} dev {net_interface}'
             with open(sh_add_ip, 'a') as the_file:
                 the_file.write(cmd + '\n')
-            # print(cmd)
-            # os.system(cmd)
     return list_ipv6
 
 
 cfg_squid = '''
-    
+
     max_filedesc 500000
     pid_filename /usr/local/squid/var/run/{pid}.pid
     access_log          none
@@ -108,10 +117,10 @@ cfg_squid = '''
     request_header_access All deny all
 
     cache           deny    all
-   
+
     acl to_ipv6 dst ipv6
     http_access deny all !to_ipv6
-    acl allow_net src 78.46.77.109
+    acl allow_net src 1.1.1.1
     {squid_conf_suffix}
     {squid_conf_refresh}
     {block_proxies}
@@ -147,17 +156,17 @@ squid_conf_suffix = '''
     http_access deny manager
 
     auth_param basic program /usr/local/squid/libexec/basic_ncsa_auth /etc/squid/{pid}.auth
-    
+
     auth_param basic children 5
     auth_param basic realm Web-Proxy
     auth_param basic credentialsttl 1 minute
     auth_param basic casesensitive off
-    
+
     acl db-auth proxy_auth REQUIRED
     http_access allow db-auth
     http_access allow localhost
     http_access deny all
-    
+
 
     coredump_dir /var/spool/squid3
     unique_hostname V6proxies-Net
@@ -177,14 +186,29 @@ for ip_out in ipv6:
     start_port = start_port + 1
     proxies += proxy_format + '\n'
 
-gen_htpasswd = GenHtpasswd(filename='/etc/squid/' + pool_name + '.auth', create=True)
-gen_htpasswd.update(username=username, password=password)
-gen_htpasswd.save()
+auth_file = f'/etc/squid/{pool_name}.auth'
+
+ht = HtpasswdFile(auth_file, new=True)
+ht.set_password(username, password)
+ht.save()
 
 cfg_squid_gen = cfg_squid.format(pid=pool_name, squid_conf_refresh=squid_conf_refresh,
                                  squid_conf_suffix=squid_conf_suffix.format(pid=pool_name),
                                  block_proxies=proxies)
 
 squid_conf_file = f'/etc/squid/squid-{pool_name}.conf'
+if os.path.exists(path=squid_conf_file):
+    os.remove(path=squid_conf_file)
+    print("%s exists. Removed" % squid_conf_file)
 with open(squid_conf_file, 'a') as the_file:
     the_file.write(cfg_squid_gen + '\n')
+
+print("=========================== \n")
+print("\n \n")
+print("Run two command bellow to start proxies")
+print("\n \n")
+print(f"bash {base_path}/{sh_add_ip}")
+print(f"/usr/local/squid/sbin/squid -f {squid_conf_file}")
+print("\n \n")
+print("Create %d proxies. Port start from %d with user: %s | password: %s" % (
+    number_ipv6, start_port, username, password))

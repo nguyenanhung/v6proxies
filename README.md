@@ -1,6 +1,22 @@
-## Squid Ipv6 Proxies
+# Squid Ipv6 Proxies
 
 I made private ipv6 proxies for you. Use squid software. Translate ipv4 port to ipv6. Each port to one ipv6 outgoing
+
+## Table of Contents
+
+<!--ts-->
+  * [Squid Ipv6 Proxies](#squid-ipv6-proxies)
+  * [Features](#features)
+  * [Requirements](#requirements)
+  * [Install](#install)
+     * [Step 1](#step-1)
+     * [Step 2](#step-2)
+     * [Testing](#testing)
+  * [License](#license)
+
+<!-- Added by: gcb, at: Thu 29 Oct 2020 02:12:41 PM +07 -->
+
+<!--te-->
 
 ## Features
 
@@ -66,7 +82,7 @@ optional arguments:
 For example. I have ipv6 subnet `2602:fed2:699b::/48` and I want to make `2000` proxies with start ipv4 port from `10000`, `each proxy on /64`
 
 ```shell script
-PYTHONPATH=/opt/v6proxies python3.6 --ipv6_subnet_full 2602:fed2:699b::/48 --net_interface eth0 --pool_name squidv6  --number_ipv6 2000 --unique_ip 1 --start_port 10000
+PYTHONPATH=/opt/v6proxies python3.6 gen_squid.py --ipv6_subnet_full 2602:fed2:699b::/48 --net_interface eth0 --pool_name squidv6  --number_ipv6 2000 --unique_ip 1 --start_port 10000
 ```
 This script makes one squid config in /etc/squid with a filename like : `squid-squidv6.conf` and auth config file `squidv6.auth`
 
@@ -98,5 +114,7 @@ example
 curl -x http://cloud:v6ForYou69@127.0.0.1:10000 https://ident.me 
 ```
 
+## License
+Distributed under the MIT License. See `LICENSE` for more information.
 
  
